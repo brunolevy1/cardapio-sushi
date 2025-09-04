@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardápio Digital - Sushi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #ff4c4c;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 1.5em;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+
+    .pratos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .prato {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .prato img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .prato h3 {
+      margin: 10px 0 5px;
+      font-size: 1.1em;
+    }
+
+    .prato p {
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .prato button {
+      background: #ff4c4c;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .carrinho {
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .carrinho h2 {
+      margin-top: 0;
+    }
+
+    #lista-carrinho li {
+      margin: 5px 0;
+    }
+
+    .finalizar {
+      background: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    🍣 Cardápio Sushi
+  </header>
+
+  <div class="container">
+    <div class="pratos">
+      <div class="prato">
+        <img src="https://via.placeholder.com/150" alt="Sushi 1">
+        <h3>Combo 8 Peças</h3>
+        <p>R$ 25,00</p>
+        <button onclick="adicionarCarrinho('Combo 8 Peças', 25)">Adicionar</button>
+      </div>
+
+      <div class="prato">
+        <img src="https://via.placeholder.com/150" alt="Sushi 2">
+        <h3>Temaki Salmão</h3>
+        <p>R$ 18,00</p>
+        <button onclick="adicionarCarrinho('Temaki Salmão', 18)">Adicionar</button>
+      </div>
+
+      <div class="prato">
+        <img src="https://via.placeholder.com/150" alt="Sushi 3">
+        <h3>Hot Roll 10 unid.</h3>
+        <p>R$ 30,00</p>
+        <button onclick="adicionarCarrinho('Hot Roll 10 unid.', 30)">Adicionar</button>
+      </div>
+    </div>
+
+    <div class="carrinho">
+      <h2>🛒 Carrinho</h2>
+      <ul id="lista-carrinho"></ul>
+      <p><strong>Total: R$ <span id="total">0.00</span></strong></p>
+      <button class="finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
+    </div>
+  </div>
+
+  <script>
+    let carrinho = [];
+
+    function adicionarCarrinho(nome, preco) {
+      carrinho.push({ nome, preco });
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      const lista = document.getElementById('lista-carrinho');
+      const total = document.getElementById('total');
+
+      lista.innerHTML = '';
+      let soma = 0;
+
+      carrinho.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
+        lista.appendChild(li);
+        soma += item.preco;
+      });
+
+      total.textContent = soma.toFixed(2);
+    }
+
+    function finalizarPedido() {
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+
+      let resumo = carrinho.map(item => `- ${item.nome}: R$ ${item.preco.toFixed(2)}`).join('\n');
+      let total = carrinho.reduce((acc, item) => acc + item.preco, 0).toFixed(2);
+
+      // Enviar direto para o WhatsApp do restaurante
+      const numero = '5599999999999'; // coloque o número do restaurante aqui (com DDD e país)
+      const mensagem = `Olá, gostaria de fazer o pedido:\n\n${resumo}\n\nTotal: R$ ${total}`;
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
